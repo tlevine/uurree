@@ -46,6 +46,7 @@ def find_line_start(fp, interval = None):
         interval = max(1, len(fp.readline()))
 
     while True:
+        print(seed, interval)
         fp.seek(seed - interval)
         text_in_interval = fp.read(interval)
         newlines = text_in_interval.count('\n')
