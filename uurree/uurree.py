@@ -4,6 +4,14 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+def line_stats(line):
+    '''
+    Levy & Lemeshow, page 30
+    '''
+    return {
+        'weight': len(line) ** -1,
+        'x': len(line),
+
 def simple_random(n, fp, replace = True, give_up_at = 100):
     '''
     If data are appended to the file during the function call,
