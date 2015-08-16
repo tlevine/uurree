@@ -3,10 +3,18 @@ from random import randint
 
 from .uurree import find_line_start
 
-def line_stats(lines):
+def total(lines, filesize):
     '''
     Levy & Lemeshow, page 30
+    Lohr, page 39
     '''
+    expected_value = 0
+    variance = 0
+    for line in lines:
+        p_selection = len(line) / filesize
+        weight = filesize / len(line)
+        expected_value += weight * len(line)
+
     return {
         'weight': len(line) ** -1,
         'x': len(line),
