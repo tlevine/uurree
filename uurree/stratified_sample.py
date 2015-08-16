@@ -1,5 +1,7 @@
-from itertools import count
+from itertools import count, groupby
 from random import randint
+
+from more_itertools import ilen
 
 from .uurree import find_line_start
 
@@ -8,6 +10,12 @@ def total(lines, filesize):
     Levy & Lemeshow, page 30
     Lohr, page 39, 219
     '''
+    for i, the_lines in groupby(map(len, lines)):
+        weight = filesize / i
+        t_i = i * ilen(the_lines)
+        t_w = t_i * weight
+
+    sum(map(len, lines))
     expected_value = 0
     variance = 0
     for line in lines:
