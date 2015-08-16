@@ -32,9 +32,5 @@ def find_line_start(fp, interval = None):
             if seed - interval <= file_start:
                 return file_start
             interval = min(seed, interval * 2)
-        elif newlines == 1:
-            fp.seek(seed - interval)
-            fp.readline()
-            return fp.tell()
         else:
             return seed - text_in_interval[::-1].index(b'\n')
