@@ -4,21 +4,24 @@ logger = logging.getLogger(__name__)
 
 def find_line_start(fp, interval = None):
     file_start = 0
-    default_interval = 128
+    default_interval_coefficient = 3
 
+    # Ignore blank last lines.
     seed = fp.tell()
-    fp.seek(0, 2)
-    file_end = fp.tell() - 1
+    if fp.readline() == b'':
+        seed -= 1
 
+    # Find the end of the file.
+    fp.seek(0, 2)
+    file_end = fp.tell()
+
+    # Return 0 right away if we're at the beginning of the file.
     if seed <= file_start or file_end <= file_start:
         return file_start
 
+    # Set the backwards scan interval
     if not interval:
-        fp.readline()
-        interval = len(fp.readline())
-        if interval == 0:
-            interval = default_interval
-        interval = min(seed, interval)
+        interval = min(seed, fp.readline() * default_interval_coefficient)
 
     logger.debug('Seed: %d, Interval: %d' % (seed, interval))
     while True:
