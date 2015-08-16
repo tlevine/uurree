@@ -44,5 +44,17 @@ def simple_random(n, fp):
 """
 
 
-def find_line_start(fp):
-    return 3 
+def find_line_start(fp, interval = 100):
+    seed = fp.tell()
+
+    while True:
+        fp.seek(max(0, seed - interval))
+        newlines = fp.read(interval).count('\n')
+        if newlines == 0:
+            interval = interval * 2
+        elif newlines == 1:
+            fp.seek(seed - interval)
+            fp.readline()
+            return fp.tell()
+        else:
+            interval = int(interval * 2 / 3)
