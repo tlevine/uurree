@@ -20,7 +20,10 @@ def test_find_line_start(seed, expected_line_start, interval:int):
         else:
             fp.seek(line_start - 1)
             prev_char = fp.read(1)
+        fp.readline()
+        line_end = fp.tell()
 
     assert prev_char == '\n'
+    assert line_start < seed < line_end
    #assert observed == expected_line_start
     
