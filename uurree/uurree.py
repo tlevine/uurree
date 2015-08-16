@@ -58,7 +58,7 @@ def find_line_start(fp, interval = None):
         if newlines == 0:
             interval = interval * 2
         elif newlines == 1:
-            fp.seek(seed - interval)
+            fp.seek(max(0, seed - interval))
             fp.readline()
             return fp.tell()
         else:
