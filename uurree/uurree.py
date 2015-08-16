@@ -7,12 +7,11 @@ def find_line_start(fp, interval = None):
     default_interval = 128
 
     seed = fp.tell()
-    if seed == file_start:
-        return file_start
-
     fp.seek(0, 2)
-    file_end = fp.tell()
-    seed = min(seed, fp.tell())
+    file_end = fp.tell() - 1
+
+    if seed == file_start or file_end < 0:
+        return file_start
 
     if not interval:
         fp.readline()
