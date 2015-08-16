@@ -1,7 +1,7 @@
 import logging
 from collections import Counter
 from random import randint
-from itertools import count
+from itertools import count, takewhile
 
 logger = logging.getLogger(__name__)
 
@@ -40,3 +40,13 @@ def estimated_cdf(n, fp, give_up_at = 100):
         total += negative_absolute_cdf[i]
         cdf[i] = total / n
     return cdf
+
+def bin(cdf, n = 5):
+    binsize = (max(cdf) - min(cdf)) / n
+    current_bin = 1
+    x = Counter()
+    for line_length in sorted(cdf):
+        x[current_bin] = cdf[line_length]
+        if line_length > min(cdf) + binsize * current_bin:
+            current_bin += 1
+    return x
