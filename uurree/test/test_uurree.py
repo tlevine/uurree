@@ -9,10 +9,14 @@ fn = os.path.abspath(os.path.join(__file__, '..', 'fixtures', 'parsing-pdfs.md')
 @pytest.mark.randomize(min_num = -10, max_num = 15382 * 2, ncalls = 10)
 def test_simple_random(n:int):
     with open(fn) as fp:
-        uurree.simple_random(n, fp, replace = True, give_up_at = 100)
+        if n >= 0:
+            observed = list(uurree.simple_random(n, fp, replace = True, give_up_at = 100))
+        else:
+            with pytest.raises(ValueError):
+                uurree.simple_random(n, fp, replace = True, give_up_at = 100)
+    assert len(observed) == n
 
-@pytest.mark.skip
-@pytest.mark.randomize(min_num = -10, max_num = 15382 * 2, ncalls = 10)
+@pytest.mark.randomize(min_num = -10, max_num = 15382 * 2, ncalls = 1)
 def test_find_line_start(seed:int, interval:int):
     with open(fn) as fp:
         fp.seek(0, 2)
