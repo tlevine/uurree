@@ -39,6 +39,11 @@ def test_find_line_start(seed:int, interval:int):
 
         file_end = fp.seek(0, 2)
 
+        if line_start > 0:
+            fp.seek(line_start)
+            line = fp.readline()
+            assert len(line) > 0
+        
     assert line_start <= seed < line_end, (line_start, seed, line_end)
     if prev_char == '\n':
         assert line_start == seed
