@@ -1,10 +1,11 @@
-import os, signal
+import os, signal, logging
 
 from more_itertools import ilen, consume
 import pytest
 
 from .. import uurree
 
+logging.basicConfig(level = logging.DEBUG)
 fn = os.path.abspath(os.path.join(__file__, '..', 'fixtures', 'parsing-pdfs.md'))
 
 @pytest.mark.randomize(min_num = -10, max_num = 100, ncalls = 10)

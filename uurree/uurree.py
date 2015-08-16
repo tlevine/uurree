@@ -1,5 +1,8 @@
 from itertools import count, repeat
 from random import randint
+import logging
+
+logger = logging.getLogger(__name__)
 
 def simple_random(n, fp, replace = True, give_up_at = 100):
     '''
@@ -36,6 +39,8 @@ def simple_random(n, fp, replace = True, give_up_at = 100):
 
 def find_line_start(fp, interval = None):
     file_start = 0
+    default_interval = 10
+
     seed = fp.tell()
 
     fp.seek(0, 2)
@@ -43,10 +48,10 @@ def find_line_start(fp, interval = None):
     seed = min(seed, fp.tell())
 
     if not interval:
-        interval = max(1, len(fp.readline()))
+        interval = max(1, min(seed, len(fp.readline())))
 
+    logger.debug('Seed: %d, Interval: %d' % (seed, interval))
     while True:
-        print(seed, interval)
         fp.seek(seed - interval)
         text_in_interval = fp.read(interval)
         newlines = text_in_interval.count('\n')
