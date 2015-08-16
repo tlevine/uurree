@@ -28,11 +28,15 @@ def estimated_cdf(n, fp, give_up_at = 100):
         line = fp.readline()
         if line.endswith(b'\n'):
             negative_absolute_cdf[len(line)] += 1
+            if sum(negative_absolute_cdf.values()) == n:
+                break
 
         elif i > give_up_at and len(negative_absolute_cdf) < (i / give_up_at):
             raise EnvironmentError('This file probably doesn\'t have enough lines.')
 
-    cdf = Counter(negative_absolute_cdf)
-    for i in cdf:
-        cdf[i] = 1 - (cdf[i] / n)
+    cdf = Counter()
+    total = 0
+    for i in sorted(negative_absolute_cdf):
+        total += negative_absolute_cdf[i]
+        cdf[i] = total / n
     return cdf
