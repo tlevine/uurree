@@ -13,7 +13,7 @@ def test_find_line_start(seed:int, interval:int):
 
 
         def abort(*args):
-            raise TimeoutError('The function shouldn\'t take this long.')
+            raise AssertionError('The function shouldn\'t take this long.')
         signal.signal(signal.SIGALRM, abort)
         signal.alarm(1)
         line_start = uurree.find_line_start(fp, interval = interval)
