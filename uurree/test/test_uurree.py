@@ -7,6 +7,9 @@ from .. import uurree
 @pytest.mark.randomize(min_num = -10, max_num = 15382 * 2)
 def test_find_line_start(seed:int, interval:int):
     fn = os.path.abspath(os.path.join(__file__, '..', 'fixtures', 'parsing-pdfs.md'))
+    if interval > seed:
+        interval = seed
+
     with open(fn) as fp:
         fp.seek(seed - 1)
         prev_char = fp.read(1)

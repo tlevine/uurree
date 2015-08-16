@@ -54,8 +54,6 @@ def find_line_start(fp, interval = None):
 
     if not interval:
         interval = max(1, len(fp.readline()))
-    elif interval > file_end:
-        interval = file_end
 
     fp.seek(seed)
 
