@@ -47,24 +47,24 @@ def simple_random(n, fp):
 def find_line_start(fp, interval = None):
     seed = fp.tell()
     fp.seek(0, 2)
+
     file_end = fp.tell()
     if seed > file_end:
         seed = file_end
-
     if not interval:
-        fp.readline()
-        interval = fp.tell() - seed
-        fp.seek(seed)
+        interval = max(1, len(fp.readline()))
+
+    fp.seek(seed)
 
     while True:
-        fp.seek(max(0, seed - interval))
-        x = fp.read(interval)
-        newlines = x.count('\n')
+        fp.seek(seed - interval)
+        text_in_interval = fp.read(interval)
+        newlines = text_in_interval.count('\n')
         if newlines == 0:
-            interval = interval * 2
+            interval = max(seed, interval * 2)
         elif newlines == 1:
-            fp.seek(max(0, seed - interval))
+            fp.seek(seed - interval)
             fp.readline()
             return fp.tell()
         else:
-            return fp.tell() - x[::-1].index('\n')
+            return seed - text_in_interval[::-1].index('\n')
