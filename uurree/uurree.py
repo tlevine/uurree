@@ -46,11 +46,10 @@ def simple_random(n, fp):
 
 def find_line_start(fp, interval = None):
     seed = fp.tell()
-    fp.seek(0, 2)
 
+    fp.seek(0, 2)
     file_end = fp.tell()
-    if seed > file_end:
-        seed = file_end
+    seed = min(seed, fp.tell())
 
     if not interval:
         interval = max(1, len(fp.readline()))
@@ -60,6 +59,8 @@ def find_line_start(fp, interval = None):
         text_in_interval = fp.read(interval)
         newlines = text_in_interval.count('\n')
         if newlines == 0:
+            if seed - interval == 0:
+                return 0
             interval = min(seed, interval * 2)
         elif newlines == 1:
             fp.seek(seed - interval)
