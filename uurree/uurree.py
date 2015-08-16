@@ -1,6 +1,7 @@
 from itertools import count, repeat
 from random import randint
 
+"""
 def simple_random(n, fp):
     '''
     with replacement
@@ -40,7 +41,8 @@ def simple_random(n, fp):
 
 
     simple_random(args.n, fp)
+"""
 
 
 def find_line_start(fp):
-
+    return 3 
