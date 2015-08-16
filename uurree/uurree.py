@@ -10,7 +10,7 @@ def find_line_start(fp, interval = None):
     fp.seek(0, 2)
     file_end = fp.tell() - 1
 
-    if seed == file_start or file_end < 0:
+    if seed <= file_start or file_end <= file_start:
         return file_start
 
     if not interval:

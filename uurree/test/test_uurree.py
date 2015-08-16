@@ -25,24 +25,21 @@ def test_find_line_start(seed:int, interval:int):
         line_start = uurree.find_line_start(fp, interval = interval)
         signal.alarm(0)
 
+        fp.seek(line_start)
+        print('Line is %s.' % fp.readline())
+
         # Unless we are at the beginning of the file, the character before
         # the present line should be a newline.
         if line_start > 0:
             fp.seek(line_start - 1)
             assert fp.read(1) == b'\n'
         
-        # We should not count the last line of the file.
-        if fp.readline().endswith(b'\n'):
-            line_end = fp.tell()
-        else:
-            line_end = fp.tell() + 1
-
+        line_end = fp.tell()
         file_end = fp.seek(0, 2)
 
-        if line_start > 0:
-            fp.seek(line_start)
-            line = fp.readline()
-            assert len(line) > 0
+        # We should not count empty last lines.
+        fp.seek(line_start)
+        assert fp.readline() != b''
         
     assert line_start <= seed < line_end, (line_start, seed, line_end)
     if prev_char == '\n':
