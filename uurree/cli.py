@@ -23,10 +23,8 @@ def main():
 
     filesize = os.stat(args.file.name).st_size
     lines = stratified_sample.sample(args.n, args.file, replace = args.replace)
-
-    for line in lines:
-        len(line)
-    sum(map(len, lines))
+    stats = total(filesize, lines)
+    print(stats)
 
 if __name__ == '__main__':
     main()
