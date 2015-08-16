@@ -42,6 +42,8 @@ def find_line_start(fp, interval = None):
     default_interval = 10
 
     seed = fp.tell()
+    if seed == file_start:
+        return file_start
 
     fp.seek(0, 2)
     file_end = fp.tell()
