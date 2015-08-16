@@ -31,13 +31,13 @@ def test_find_line_start(seed:int, interval:int):
 
         # We should not count empty last lines.
         fp.seek(line_start)
-        assert fp.readline() != b''
+        assert fp.readline() != b'', fp.tell()
 
         # Unless we are at the beginning of the file, the character before
         # the present line should be a newline.
         if line_start > 0:
             fp.seek(line_start - 1)
-            assert fp.read(1) == b'\n'
+            assert fp.read(1) == b'\n', fp.tell()
         
         file_end = fp.seek(0, 2)
 
