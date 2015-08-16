@@ -8,7 +8,7 @@ from .. import uurree
 fn = os.path.abspath(os.path.join(__file__, '..', 'fixtures', 'parsing-pdfs.md'))
 
 @pytest.mark.randomize(min_num = -10, max_num = 100, ncalls = 10)
-def test_simple_random(n:int):
+def test_simple_random(n:int, replace:bool):
     with open(fn) as fp:
         # The function should finish quickly.
         def abort(*args):
@@ -18,15 +18,15 @@ def test_simple_random(n:int):
 
         # We should get the right number of results.
         if n >= 0:
-            observed = ilen(uurree.simple_random(n, fp, replace = True, give_up_at = 100))
+            observed = ilen(uurree.simple_random(n, fp, replace = replace, give_up_at = 100))
+            assert observed == n
         else:
             with pytest.raises(ValueError):
                 consume(uurree.simple_random(n, fp))
 
         signal.alarm(0)
-    assert observed == n
 
-@pytest.mark.randomize(min_num = -10, max_num = 15382 * 2, ncalls = 1)
+@pytest.mark.randomize(min_num = -10, max_num = 15382 * 2, ncalls = 10)
 def test_find_line_start(seed:int, interval:int):
     with open(fn) as fp:
         fp.seek(0, 2)
