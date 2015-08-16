@@ -6,13 +6,13 @@ from .uurree import find_line_start
 def total(lines, filesize):
     '''
     Levy & Lemeshow, page 30
-    Lohr, page 39
+    Lohr, page 39, 219
     '''
     expected_value = 0
     variance = 0
     for line in lines:
-        p_selection = len(line) / filesize
-        weight = filesize / len(line)
+    #   inclusion_probability = len(line) / filesize
+        sampling_weight = filesize / len(line)
         expected_value += weight * len(line)
 
     return {
