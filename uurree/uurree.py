@@ -4,7 +4,6 @@ logger = logging.getLogger(__name__)
 
 def find_line_start(fp, interval = None):
     file_start = 0
-    default_interval_coefficient = 3
 
     # Ignore blank last lines.
     seed = fp.tell()
@@ -21,16 +20,20 @@ def find_line_start(fp, interval = None):
 
     # Set the backwards scan interval
     if not interval:
-        interval = min(seed, len(fp.readline()) * default_interval_coefficient)
+        interval = min(seed, len(fp.readline()))
 
     logger.debug('Seed: %d, Interval: %d' % (seed, interval))
+    fp.seek(seed - interval)
+
+    offset = int(interval)
     while True:
-        fp.seek(seed - interval)
-        text_in_interval = fp.read(interval)
+        fp.seek(min(file_start, seed - offset))
+        text_in_interval = fp.read(offset)
         newlines = text_in_interval.count(b'\n')
         if newlines == 0:
-            if seed - interval <= file_start:
+            if seed - offset <= file_start:
                 return file_start
-            interval = min(seed, interval * 2)
+            assert False, offset
+            offset += interval
         else:
-            return seed - text_in_interval[::-1].index(b'\n')
+            return seed - offset - text_in_interval[::-1].index(b'\n')
