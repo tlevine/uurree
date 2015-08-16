@@ -8,13 +8,12 @@ from .. import uurree
 def test_find_line_start(seed:int, interval:int):
     fn = os.path.abspath(os.path.join(__file__, '..', 'fixtures', 'parsing-pdfs.md'))
     with open(fn) as fp:
-        fp.seek(seed)
+        fp.seek(seed - 1)
+        prev_char = fp.read(1)
         line_start = uurree.find_line_start(fp, interval = interval)
-        if line_start == 0:
-            prev_char = '\n'
-        else:
+        if line_start > 0:
             fp.seek(line_start - 1)
-            prev_char = fp.read(1)
+            assert fp.read(1) == '\n'
         
         # We should not count the last line of the file.
         if fp.readline().endswith('\n'):
@@ -27,5 +26,6 @@ def test_find_line_start(seed:int, interval:int):
     # To make the assertions easier
     if seed >= file_end:
         seed = file_end
-    assert prev_char == '\n'
-    assert line_start < seed < line_end
+    assert line_start <= seed < line_end, (line_start, seed, line_end)
+    if prev_char == '\n':
+        assert line_start == seed
