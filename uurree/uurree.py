@@ -53,12 +53,13 @@ def find_line_start(fp, interval = None):
 
     if not interval:
         fp.readline()
-        interval = fp.tell()
+        interval = fp.tell() - seed
         fp.seek(seed)
 
     while True:
         fp.seek(max(0, seed - interval))
-        newlines = fp.read(interval).count('\n')
+        x = fp.read(interval)
+        newlines = x.count('\n')
         if newlines == 0:
             interval = interval * 2
         elif newlines == 1:
@@ -66,4 +67,4 @@ def find_line_start(fp, interval = None):
             fp.readline()
             return fp.tell()
         else:
-            interval = int(interval * 2 / 3)
+            return fp.tell() - x[::-1].index('\n')
