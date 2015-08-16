@@ -7,7 +7,7 @@ from .. import uurree
 
 fn = os.path.abspath(os.path.join(__file__, '..', 'fixtures', 'parsing-pdfs.md'))
 
-@pytest.mark.randomize(min_num = -10, max_num = 1000, ncalls = 10)
+@pytest.mark.randomize(min_num = -10, max_num = 100, ncalls = 10)
 def test_simple_random(n:int):
     with open(fn) as fp:
         # The function should finish quickly.
