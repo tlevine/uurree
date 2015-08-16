@@ -21,7 +21,7 @@ def find_line_start(fp, interval = None):
 
     # Set the backwards scan interval
     if not interval:
-        interval = min(seed, fp.readline() * default_interval_coefficient)
+        interval = min(seed, len(fp.readline()) * default_interval_coefficient)
 
     logger.debug('Seed: %d, Interval: %d' % (seed, interval))
     while True:

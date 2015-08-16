@@ -12,7 +12,7 @@ def test_find_line_start(seed:int, interval:int):
     with open(fn, 'rb') as fp:
         fp.seek(0, 2)
         seed = min(seed, fp.tell())
-        interval = min(interval, seed)
+        interval = min(interval, 1000)
 
         fp.seek(seed - 1)
         prev_char = fp.read(1)
