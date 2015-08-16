@@ -4,10 +4,16 @@ import pytest
 
 from .. import uurree
 
+fn = os.path.abspath(os.path.join(__file__, '..', 'fixtures', 'parsing-pdfs.md'))
+
+@pytest.mark.randomize(min_num = -10, max_num = 15382 * 2, ncalls = 10)
+def test_simple_random(n:int):
+    with open(fn) as fp:
+        uurree.simple_random(n, fp, replace = True, give_up_at = 100)
+
+@pytest.mark.skip
 @pytest.mark.randomize(min_num = -10, max_num = 15382 * 2, ncalls = 10)
 def test_find_line_start(seed:int, interval:int):
-    fn = os.path.abspath(os.path.join(__file__, '..', 'fixtures', 'parsing-pdfs.md'))
-
     with open(fn) as fp:
         fp.seek(0, 2)
         seed = min(seed, fp.tell())

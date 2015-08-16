@@ -1,11 +1,8 @@
 from itertools import count, repeat
 from random import randint
 
-"""
-def simple_random(n, fp):
+def simple_random(n, fp, replace = True, give_up_at = 100):
     '''
-    with replacement
-
     If data are appended to the file during the function call,
     the appended data are ignored for the sampling.
     '''
@@ -13,7 +10,7 @@ def simple_random(n, fp):
     fp.seek(0, 2)
     file_end = fp.tell()
     
-    lines_emitted = 0
+    emitted = set()
     for i in count():
         trial = randint(file_start, file_end)
         fp.seek(trial)
@@ -22,27 +19,12 @@ def simple_random(n, fp):
             fp.seek(trial - j * rough_linelength_estimate)
             precise_linelength_estimate = fp.readline()
             if fp.tell() < trial:
+                pass
 
-
-
-
-
-
-        if len(line) > 0 and line[-1] == '\n':
-            yield line
-            lines_emitted += 1
-
-        if lines_emitted == n:
-            break
-        if lines_emitted == 0 and i > 1000:
-            raise EnvironmentError('It appears that this file contains no line breaks.')
-
-
-
+        if i > give_up_at and len(emitted) < (i / give_up_at):
+            raise EnvironmentError('This file contains few line breaks, if any.')
 
     simple_random(args.n, fp)
-"""
-
 
 def find_line_start(fp, interval = None):
     seed = fp.tell()
