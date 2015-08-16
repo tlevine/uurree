@@ -14,9 +14,19 @@ def simple_random(n, fp):
     
     lines_emitted = 0
     for i in count():
-        fp.seek(randint(file_start, file_end))
-        fp.readline()
-        line = fp.readline()
+        trial = randint(file_start, file_end)
+        fp.seek(trial)
+        rough_linelength_estimate = len(fp.readline()) * 2
+        for j in count():
+            fp.seek(trial - j * rough_linelength_estimate)
+            precise_linelength_estimate = fp.readline()
+            if fp.tell() < trial:
+
+
+
+
+
+
         if len(line) > 0 and line[-1] == '\n':
             yield line
             lines_emitted += 1
@@ -31,4 +41,6 @@ def simple_random(n, fp):
 
     simple_random(args.n, fp)
 
+
+def find_line_start(fp):
 
