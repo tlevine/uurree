@@ -1,4 +1,4 @@
-import os
+import os, signal
 
 import pytest
 
@@ -10,7 +10,15 @@ def test_find_line_start(seed:int, interval:int):
     with open(fn) as fp:
         fp.seek(seed - 1)
         prev_char = fp.read(1)
+
+
+        def abort(*args):
+            raise TimeoutError('The function shouldn\'t take this long.')
+        signal.signal(signal.SIGALRM, abort)
+        signal.alarm(1)
         line_start = uurree.find_line_start(fp, interval = interval)
+        signal.alarm(0)
+
         if line_start > 0:
             fp.seek(line_start - 1)
             assert fp.read(1) == '\n'
