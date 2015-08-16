@@ -10,22 +10,23 @@ def total(lines, filesize):
     Levy & Lemeshow, page 30
     Lohr, page 39, 219
     '''
-    for i, the_lines in groupby(map(len, lines)):
-        weight = filesize / i
-        t_i = i * ilen(the_lines)
-        t_w = t_i * weight
+    lines = sorted(map(len, lines))
 
-    sum(map(len, lines))
-    expected_value = 0
-    variance = 0
-    for line in lines:
-    #   inclusion_probability = len(line) / filesize
-        sampling_weight = filesize / len(line)
-        expected_value += weight * len(line)
+    t = 0
+    for line_length, the_lines in groupby(lines):
+        w_i = filesize / line_length
+        t_i = line_length * ilen(the_lines)
+        t += w_i * t_i
+
+    V_t = 0
+    for line_length, the_lines in groupby(lines):
+        t_psi = t_i / w_i
+        ss = (t_psi - t) ** 2
+        V_t += ss
 
     return {
-        'weight': len(line) ** -1,
-        'x': len(line),
+        'expected_value': t,
+        'variance': V_t,
     }
 
 def sample(n, fp, replace = True, give_up_at = 100):
