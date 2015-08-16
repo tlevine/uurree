@@ -10,17 +10,18 @@ def simple_random(n, fp, replace = True, give_up_at = 100):
     fp.seek(0, 2)
     file_end = fp.tell()
     emitted = set()
+
     for i in count():
 
         fp.seek(randint(file_start, file_end))
         line_start = find_line_start(fp)
 
-        if replace and line_start not in emitted:
+        if replace or line_start not in emitted:
             emitted.add(line_start)
             yield fp.readline()
 
         if i > give_up_at and len(emitted) < (i / give_up_at):
-            raise EnvironmentError('This file contains few line breaks, if any.')
+            raise EnvironmentError('This file probably doesn\'t have enough lines.')
 
     simple_random(args.n, fp)
 

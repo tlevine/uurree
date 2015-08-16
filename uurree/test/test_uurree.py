@@ -1,12 +1,13 @@
 import os, signal
 
+from more_itertools import ilen
 import pytest
 
 from .. import uurree
 
 fn = os.path.abspath(os.path.join(__file__, '..', 'fixtures', 'parsing-pdfs.md'))
 
-@pytest.mark.randomize(min_num = -10, max_num = 15382 * 2, ncalls = 10)
+@pytest.mark.randomize(min_num = -10, max_num = 1000, ncalls = 10)
 def test_simple_random(n:int):
     with open(fn) as fp:
         # The function should finish quickly.
@@ -17,13 +18,13 @@ def test_simple_random(n:int):
 
         # We should get the right number of results.
         if n >= 0:
-            observed = list(uurree.simple_random(n, fp, replace = True, give_up_at = 100))
+            observed = ilen(uurree.simple_random(n, fp, replace = True, give_up_at = 100))
         else:
             with pytest.raises(ValueError):
                 uurree.simple_random(n, fp, replace = True, give_up_at = 100)
 
         signal.alarm(0)
-    assert len(observed) == n
+    assert observed == n
 
 @pytest.mark.randomize(min_num = -10, max_num = 15382 * 2, ncalls = 1)
 def test_find_line_start(seed:int, interval:int):
