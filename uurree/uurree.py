@@ -6,6 +6,9 @@ def simple_random(n, fp, replace = True, give_up_at = 100):
     If data are appended to the file during the function call,
     the appended data are ignored for the sampling.
     '''
+    if n < 0:
+        raise ValueError('Sample size must be greater than zero.')
+
     file_start = 0
     fp.seek(0, 2)
     file_end = fp.tell()

@@ -1,6 +1,6 @@
 import os, signal
 
-from more_itertools import ilen
+from more_itertools import ilen, consume
 import pytest
 
 from .. import uurree
@@ -21,7 +21,7 @@ def test_simple_random(n:int):
             observed = ilen(uurree.simple_random(n, fp, replace = True, give_up_at = 100))
         else:
             with pytest.raises(ValueError):
-                uurree.simple_random(n, fp, replace = True, give_up_at = 100)
+                consume(uurree.simple_random(n, fp))
 
         signal.alarm(0)
     assert observed == n
