@@ -16,7 +16,7 @@ def test_find_line_start(seed:int, interval:int):
         fp.seek(seed - 1)
         prev_char = fp.read(1)
 
-
+        # The function should finish quickly.
         def abort(*args):
             raise AssertionError('The function shouldn\'t take this long.')
         signal.signal(signal.SIGALRM, abort)
@@ -24,6 +24,8 @@ def test_find_line_start(seed:int, interval:int):
         line_start = uurree.find_line_start(fp, interval = interval)
         signal.alarm(0)
 
+        # Unless we are at the beginning of the file, the character before
+        # the present line should be a newline.
         if line_start > 0:
             fp.seek(line_start - 1)
             assert fp.read(1) == '\n'
@@ -36,9 +38,6 @@ def test_find_line_start(seed:int, interval:int):
 
         file_end = fp.seek(0, 2)
 
-    # To make the assertions easier
-    if seed >= file_end:
-        seed = file_end
     assert line_start <= seed < line_end, (line_start, seed, line_end)
     if prev_char == '\n':
         assert line_start == seed
