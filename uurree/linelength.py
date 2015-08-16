@@ -1,4 +1,5 @@
 import logging
+from collections import Counter
 from random import randint
 from itertools import count
 
@@ -17,11 +18,8 @@ def estimated_cdf(n, fp, give_up_at = 100):
     file_start = 0
     fp.seek(0, 2)
     file_end = fp.tell()
-    if replace:
-        emitted = list()
-    else:
-        emitted = set()
 
+    negative_absolute_cdf = Counter()
     for i in count():
 
         # Select a random byte.
@@ -29,20 +27,12 @@ def estimated_cdf(n, fp, give_up_at = 100):
 
         line = fp.readline()
         if line.endswith(b'\n'):
-            data = (line, fp.tell())
-            if replace:
-                emitted.append(data)
+            negative_absolute_cdf[len(line)] += 1
 
-            elif line_start not in emitted:
-                emitted.add(data)
-
-            if len(emitted) == n:
-                break
-        elif i > give_up_at and len(emitted) < (i / give_up_at):
+        elif i > give_up_at and len(negative_absolute_cdf) < (i / give_up_at):
             raise EnvironmentError('This file probably doesn\'t have enough lines.')
 
-
-
-
-
-
+    cdf = Counter(negative_absolute_cdf)
+    for i in cdf:
+        cdf[i] = 1 - (cdf[i] / n)
+    return cdf
