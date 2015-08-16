@@ -15,9 +15,17 @@ def test_find_line_start(seed:int, interval:int):
         else:
             fp.seek(line_start - 1)
             prev_char = fp.read(1)
-        fp.readline()
-        line_end = fp.tell()
+        
+        # We should not count the last line of the file.
+        if fp.readline().endswith('\n'):
+            line_end = fp.tell()
+        else:
+            line_end = fp.tell() + 1
 
+        file_end = fp.seek(0, 2)
+
+    # To make the assertions easier
+    if seed >= file_end:
+        seed = file_end
     assert prev_char == '\n'
     assert line_start < seed < line_end
-    
