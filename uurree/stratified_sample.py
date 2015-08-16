@@ -13,13 +13,13 @@ def total(filesize, lines):
     line_lengths = list(sorted(map(len, lines)))
 
     t = 0
-    for line_length, the_lines in groupby(lines_lengths):
+    for line_length, the_lines in groupby(line_lengths):
         w_i = filesize / line_length
         t_i = line_length * ilen(the_lines)
         t += w_i * t_i
 
     V_t = 0
-    for line_length, the_lines in groupby(lines_lengths):
+    for line_length, the_lines in groupby(line_lengths):
         t_psi = t_i / w_i
         ss = (t_psi - t) ** 2
         V_t += ss
