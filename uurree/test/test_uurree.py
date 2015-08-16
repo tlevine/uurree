@@ -27,6 +27,7 @@ def test_find_line_start(seed:int, interval:int):
 
         fp.seek(line_start)
         print('Line is %s.' % fp.readline())
+        line_end = fp.tell()
 
         # We should not count empty last lines.
         fp.seek(line_start)
@@ -38,9 +39,8 @@ def test_find_line_start(seed:int, interval:int):
             fp.seek(line_start - 1)
             assert fp.read(1) == b'\n'
         
-        line_end = fp.tell()
         file_end = fp.seek(0, 2)
 
-    assert line_start <= seed < line_end, (line_start, seed, line_end)
+    assert line_start <= seed <= line_end, (line_start, seed, line_end)
     if prev_char == '\n':
         assert line_start == seed
