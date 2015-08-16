@@ -9,7 +9,7 @@ fn = os.path.abspath(os.path.join(__file__, '..', 'fixtures', 'parsing-pdfs.md')
 
 @pytest.mark.randomize(min_num = -10, max_num = 15382 * 2, ncalls = 10)
 def test_find_line_start(seed:int, interval:int):
-    with open(fn) as fp:
+    with open(fn, 'rb') as fp:
         fp.seek(0, 2)
         seed = min(seed, fp.tell())
         interval = min(interval, seed)
@@ -29,10 +29,10 @@ def test_find_line_start(seed:int, interval:int):
         # the present line should be a newline.
         if line_start > 0:
             fp.seek(line_start - 1)
-            assert fp.read(1) == '\n'
+            assert fp.read(1) == b'\n'
         
         # We should not count the last line of the file.
-        if fp.readline().endswith('\n'):
+        if fp.readline().endswith(b'\n'):
             line_end = fp.tell()
         else:
             line_end = fp.tell() + 1

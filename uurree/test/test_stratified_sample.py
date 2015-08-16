@@ -10,7 +10,7 @@ fn = os.path.abspath(os.path.join(__file__, '..', 'fixtures', 'parsing-pdfs.md')
 
 @pytest.mark.randomize(min_num = -10, max_num = 100, ncalls = 10)
 def test_stratified(n:int, replace:bool):
-    with open(fn) as fp:
+    with open(fn, 'rb') as fp:
         # The function should finish quickly.
         def abort(*args):
             raise AssertionError('The function shouldn\'t take this long.')
