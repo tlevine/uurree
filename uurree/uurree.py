@@ -4,7 +4,7 @@ logger = logging.getLogger(__name__)
 
 def find_line_start(fp, interval = None):
     file_start = 0
-    default_interval = 32
+    default_interval = 128
 
     seed = fp.tell()
     if seed == file_start:
@@ -15,7 +15,11 @@ def find_line_start(fp, interval = None):
     seed = min(seed, fp.tell())
 
     if not interval:
-        interval = min(seed, max(default_interval, len(fp.readline())))
+        fp.readline()
+        interval = len(fp.readline())
+        if interval == 0:
+            interval = default_interval
+        interval = min(seed, interval)
 
     logger.debug('Seed: %d, Interval: %d' % (seed, interval))
     while True:
