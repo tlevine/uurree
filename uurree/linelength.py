@@ -41,21 +41,23 @@ def estimated_cdf(n, fp, give_up_at = 100):
     total = 0
     for i in sorted(negative_absolute_cdf):
         total += negative_absolute_cdf[i]
-        cdf[i] = total / n
+        cdf[i] = 1 - total / n
     return cdf
 
 def exact_cdf(fp):
-    cdf = Counter()
+    negative_absolute_cdf = Counter()
     n = 0
 
     for line in fp:
         for i in range(len(line)):
-            cdf[i] += 1
+            negative_absolute_cdf[i] += 1
             n += 1
 
-    for line_length in cdf:
-        cdf[line_length] /= n
-
+    cdf = Counter()
+    total = 0
+    for i in sorted(negative_absolute_cdf):
+        total += negative_absolute_cdf[i]
+        cdf[i] = 1 - total / n
     return cdf
 
 def bin(cdf, n = 5, func = sum):
