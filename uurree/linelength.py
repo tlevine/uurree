@@ -3,6 +3,7 @@ from collections import Counter
 from random import randint
 import itertools
 
+from sliding_window import window
 from more_itertools import ilen
 
 logger = logging.getLogger(__name__)
@@ -57,13 +58,19 @@ def exact_cdf(fp):
 
     return cdf
 
-def bin(cdf, n = 5):
+def bin(cdf, n = 5, func = sum):
     binsize = (max(cdf) - min(cdf)) / n
     current_bin = 1
     x = Counter()
     for line_length in sorted(cdf):
         bin_key = min(cdf) + binsize * current_bin
-        x[bin_key] = cdf[line_length]
+        x[bin_key] = func([x[bin_key], cdf[line_length]])
         if line_length > bin_key:
             current_bin += 1
     return x
+
+def derivative(counter):
+    dcounter = Counter()
+    for left, right in window(itertools.chain([min(counter) - 1], sorted(counter))):
+        dcounter[right] = counter[right] - counter[left]
+    return dcounter
