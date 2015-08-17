@@ -47,11 +47,10 @@ def exact_cdf(fp):
     cdf = Counter()
     n = 0
 
-    for line_length, grouper in itertools.groupby(sorted(map(len, fp))):
-        l = ilen(grouper)
-        for i in range(line_length):
-            n += l
-            cdf[i] += l
+    for line in fp:
+        for i in range(len(line)):
+            cdf[i] += 1
+            n += 1
 
     for line_length in cdf:
         cdf[line_length] /= n
