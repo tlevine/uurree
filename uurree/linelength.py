@@ -1,7 +1,9 @@
 import logging
 from collections import Counter
 from random import randint
-from itertools import count, takewhile
+import itertools
+
+from more_itertools import ilen
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +22,7 @@ def estimated_cdf(n, fp, give_up_at = 100):
     file_end = fp.tell()
 
     negative_absolute_cdf = Counter()
-    for i in count():
+    for i in itertools.count():
 
         # Select a random byte.
         fp.seek(randint(file_start, file_end))
@@ -41,12 +43,28 @@ def estimated_cdf(n, fp, give_up_at = 100):
         cdf[i] = total / n
     return cdf
 
+def exact_cdf(fp):
+    cdf = Counter()
+    n = 0
+
+    for line_length, grouper in itertools.groupby(sorted(map(len, fp))):
+        l = ilen(grouper)
+        for i in range(line_length):
+            n += l
+            cdf[i] += l
+
+    for line_length in cdf:
+        cdf[line_length] /= n
+
+    return cdf
+
 def bin(cdf, n = 5):
     binsize = (max(cdf) - min(cdf)) / n
     current_bin = 1
     x = Counter()
     for line_length in sorted(cdf):
-        x[current_bin] = cdf[line_length]
-        if line_length > min(cdf) + binsize * current_bin:
+        bin_key = min(cdf) + binsize * current_bin
+        x[bin_key] = cdf[line_length]
+        if line_length > bin_key:
             current_bin += 1
     return x
