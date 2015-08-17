@@ -1,6 +1,6 @@
 import logging
 from collections import Counter
-from random import randint
+from random import randint, random
 import itertools
 
 from sliding_window import window
@@ -45,6 +45,9 @@ def estimated_cdf(n, fp, give_up_at = 100):
     return cdf
 
 def exact_cdf(fp):
+    '''
+    what is this the cdf of?
+    '''
     negative_absolute_cdf = Counter()
     n = 0
 
@@ -57,7 +60,7 @@ def exact_cdf(fp):
     total = 0
     for i in sorted(negative_absolute_cdf):
         total += negative_absolute_cdf[i]
-        cdf[i] = 1 - total / n
+        cdf[i] = total / n
     return cdf
 
 def bin(cdf, n = 5, func = sum):
@@ -76,3 +79,27 @@ def derivative(counter):
     for left, right in window(itertools.chain([min(counter) - 1], sorted(counter))):
         dcounter[right] = counter[right] - counter[left]
     return dcounter
+
+def inverse_cdf(cdf, x):
+    cum_freq = 0
+    for i in sorted(cdf):
+        cum_freq += cdf[i]
+        if cum_freq > x:
+            return i
+
+def resample(cdf, total_length):
+    '''
+    Generate a distribution of line lengths with a particular total length.
+    '''
+    length = 0
+    while length < total_length:
+        r = random()
+        for line_length in sorted(cdf):
+            if cdf[line_length] > r:
+                yield line_length
+                length += line_length
+                break
+
+# bin(derivative(estimated_cdf(10, open('/Users/t/email.sh', 'rb'))), func = sum)
+# bin(derivative(exact_cdf(open('/Users/t/email.sh', 'rb'))), func = sum)
+# ilen(resample(exact_cdf(open('/Users/t/email.sh', 'rb')), 1000))
